@@ -62,7 +62,7 @@ export default class ConsoleLog {
             action: LogAction.CONSOLE
         } as PartialDeep<ConsoleLogLevelOptions>
     
-        const verbosity = this.generalOptions.verbosity ? this.generalOptions.verbosity : LogLevel.INFO
+        const verbosity = this.generalOptions.verbosity !== undefined ? this.generalOptions.verbosity : LogLevel.INFO
         if (verbosity < level) {
             options.action = LogAction.NONE
             return new ConsoleLogLevel(options)

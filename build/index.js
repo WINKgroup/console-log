@@ -55,7 +55,7 @@ var ConsoleLog = /** @class */ (function () {
             prefix: this.generalOptions.prefix,
             action: LogAction.CONSOLE
         };
-        var verbosity = this.generalOptions.verbosity ? this.generalOptions.verbosity : LogLevel.INFO;
+        var verbosity = this.generalOptions.verbosity !== undefined ? this.generalOptions.verbosity : LogLevel.INFO;
         if (verbosity < level) {
             options.action = LogAction.NONE;
             return new level_1.ConsoleLogLevel(options);
