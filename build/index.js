@@ -44,19 +44,12 @@ var ConsoleLogMethod;
 var ConsoleLog = /** @class */ (function () {
     function ConsoleLog(generalOptions, levelOptions) {
         this.generalOptions = generalOptions || {};
-        this.levelOptions = levelOptions || [];
+        this.levelOptions = levelOptions || {};
     }
     ConsoleLog.prototype.getLogLevelObj = function (level) {
-        for (var _i = 0, _a = this.levelOptions; _i < _a.length; _i++) {
-            var levelOptions = _a[_i];
-            if (levelOptions.level == level) {
-                var options_1 = lodash_1.default.defaultsDeep(levelOptions.options, {
-                    id: this.generalOptions.id,
-                    prefix: this.generalOptions.prefix
-                });
-                return new level_1.ConsoleLogLevel(options_1);
-            }
-        }
+        var levelOptions = this.levelOptions[level];
+        if (levelOptions)
+            return new level_1.ConsoleLogLevel(levelOptions);
         var options = {
             id: this.generalOptions.id,
             prefix: this.generalOptions.prefix,
@@ -106,6 +99,11 @@ var ConsoleLog = /** @class */ (function () {
     };
     ConsoleLog.prototype.error = function (message) {
         this.print(message, LogLevel.ERROR);
+    };
+    ConsoleLog.prototype.spawn = function (inputGeneralOptions, inputLevelOptions) {
+        var generalOptions = lodash_1.default.defaultsDeep(inputGeneralOptions, this.generalOptions);
+        var levelOptions = lodash_1.default.defaults(inputLevelOptions, this.levelOptions);
+        return new ConsoleLog(generalOptions, levelOptions);
     };
     return ConsoleLog;
 }());

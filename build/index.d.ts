@@ -35,17 +35,20 @@ export interface GeneralOptions {
     prefix?: string;
     verbosity?: LogLevel;
 }
-export interface LevelOption {
-    level: LogLevel;
-    options: PartialDeep<ConsoleLogLevelOptions>;
-}
 export default class ConsoleLog {
     generalOptions: GeneralOptions;
-    levelOptions: LevelOption[];
-    constructor(generalOptions?: GeneralOptions, levelOptions?: LevelOption[]);
+    levelOptions: {
+        [key: string]: PartialDeep<ConsoleLogLevelOptions>;
+    };
+    constructor(generalOptions?: GeneralOptions, levelOptions?: {
+        [key: string]: PartialDeep<ConsoleLogLevelOptions>;
+    });
     protected getLogLevelObj(level: LogLevel): ConsoleLogLevel;
     print(message: string, level?: LogLevel): void;
     debug(message: string): void;
     warn(message: string): void;
     error(message: string): void;
+    spawn(inputGeneralOptions?: GeneralOptions, inputLevelOptions?: {
+        [key: string]: PartialDeep<ConsoleLogLevelOptions>;
+    }): ConsoleLog;
 }

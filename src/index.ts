@@ -43,29 +43,18 @@ export interface GeneralOptions {
     verbosity?: LogLevel
 }
 
-export interface LevelOption {
-    level: LogLevel
-    options: PartialDeep<ConsoleLogLevelOptions>
-}
-
 export default class ConsoleLog {
     generalOptions:GeneralOptions
-    levelOptions:LevelOption[]
+    levelOptions: {[key:string]: PartialDeep<ConsoleLogLevelOptions>}
 
-    constructor(generalOptions?:GeneralOptions, levelOptions?:LevelOption[]) {
+    constructor(generalOptions?:GeneralOptions, levelOptions?:{[key:string]: PartialDeep<ConsoleLogLevelOptions>}) {
         this.generalOptions = generalOptions || {}
-        this.levelOptions = levelOptions || []
+        this.levelOptions = levelOptions || {}
     }
 
     protected getLogLevelObj(level:LogLevel) {
-        for (const levelOptions of this.levelOptions)
-            if (levelOptions.level == level) {
-                const options = _.defaultsDeep(levelOptions.options, {
-                    id: this.generalOptions.id,
-                    prefix: this.generalOptions.prefix
-                })
-                return new ConsoleLogLevel(options)
-            }
+        const levelOptions = this.levelOptions[level]
+        if (levelOptions) return new ConsoleLogLevel(levelOptions)
         
         const options = {
             id: this.generalOptions.id,
@@ -121,5 +110,12 @@ export default class ConsoleLog {
 
     error(message:string) {
         this.print(message, LogLevel.ERROR)
+    }
+
+    spawn(inputGeneralOptions?:GeneralOptions, inputLevelOptions?: {[key:string]: PartialDeep<ConsoleLogLevelOptions>}) {
+        const generalOptions = _.defaultsDeep(inputGeneralOptions, this.generalOptions)
+        const levelOptions = _.defaults(inputLevelOptions, this.levelOptions)
+
+        return new ConsoleLog(generalOptions, levelOptions)
     }
 }
