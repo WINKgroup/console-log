@@ -29,10 +29,10 @@ consoleLog.print('hello world!')
 `GeneralOptions` and `LogLevelOptions` are two optional objects.
 
 methods:
-- `ConsoleLog.print(message, logLevel)`: `message` is a string; `logLevel` is a value from [LogLevel][]
-- `ConsoleLog.debug(message)`: shortcut of `print` method with DEBUG [LogLevel][]
-- `ConsoleLog.warn(message)`: shortcut of `print` method with WARN [LogLevel][]
-- `ConsoleLog.error(message)`: shortcut of `print` method with ERROR [LogLevel][]
+- `ConsoleLog.print(message, logLevel)`: `message` is a string; `logLevel` is a value from [LogLevel](#loglevel)
+- `ConsoleLog.debug(message)`: shortcut of `print` method with DEBUG [LogLevel](#loglevel)
+- `ConsoleLog.warn(message)`: shortcut of `print` method with WARN [LogLevel](#loglevel)
+- `ConsoleLog.error(message)`: shortcut of `print` method with ERROR [LogLevel](#loglevel)
 - `ConsoleLog.spawn(GeneralOptions, LogLevelOptions)`: it generates a new `ConsoleLog` object that inherits same options of original with some updates according with parameters passed
 
 
@@ -40,7 +40,7 @@ methods:
 all the attributes of this object are optional:
 - GeneralOptions.id: an id that will be shown for each log
 - GeneralOptions.prefix: a prefix that will be shown for each log
-- GeneralOptions.verbosity: every log that is below this [LogLevel][] will have [LogAction][] = NONE
+- GeneralOptions.verbosity: every log that is below this [LogLevel](#loglevel) will have [LogAction](#logaction) = NONE
 
 ### LogAction
 enum collection of possible actions to perform when a method of `ConsoleLog` object is called
