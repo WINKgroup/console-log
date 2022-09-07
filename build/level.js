@@ -53,10 +53,10 @@ var ConsoleLogLevel = /** @class */ (function () {
                 text = chalk_1.default.green(text);
                 break;
             case index_1.ConsoleLogColor.YELLOW_BRIGHT:
-                text = chalk_1.default.green(text);
+                text = chalk_1.default.yellowBright(text);
                 break;
             case index_1.ConsoleLogColor.RED:
-                text = chalk_1.default.green(text);
+                text = chalk_1.default.red(text);
                 break;
         }
         switch (method) {

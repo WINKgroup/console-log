@@ -62,10 +62,10 @@ export class ConsoleLogLevel {
                 text = chalk.green(text)
                 break
             case ConsoleLogColor.YELLOW_BRIGHT:
-                text = chalk.green(text)
+                text = chalk.yellowBright(text)
                 break
             case ConsoleLogColor.RED:
-                text = chalk.green(text)
+                text = chalk.red(text)
                 break
         }
 
