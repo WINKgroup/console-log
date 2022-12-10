@@ -38,11 +38,13 @@ var ConsoleLogLevel = /** @class */ (function () {
     };
     ConsoleLogLevel.prototype.prepareMessage = function () {
         var timestamp = this.buildTimestamp();
+        if (this.options.prefix === undefined)
+            return "[".concat(timestamp, "] ");
         if (timestamp)
             timestamp += ' ';
-        if (this.options.prefix === undefined)
-            return timestamp;
-        return this.options.id ? timestamp + this.options.prefix + " (".concat(this.options.id, "): ") : timestamp + this.options.prefix + ': ';
+        if (this.options.id)
+            return "[".concat(timestamp).concat(this.options.prefix, " (").concat(this.options.id, ")] ");
+        return "[".concat(timestamp).concat(this.options.prefix, "] ");
     };
     ConsoleLogLevel.prototype.runActionConsole = function (message) {
         var method = (this.options.consoleOptions && this.options.consoleOptions.method ? this.options.consoleOptions.method : index_1.ConsoleLogMethod.INFO);

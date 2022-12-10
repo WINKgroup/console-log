@@ -47,9 +47,10 @@ export class ConsoleLogLevel {
 
     protected prepareMessage() {
         let timestamp = this.buildTimestamp()
+        if (this.options.prefix === undefined) return `[${timestamp}] `
         if (timestamp) timestamp += ' '
-        if (this.options.prefix === undefined) return timestamp
-        return this.options.id ? timestamp + this.options.prefix + ` (${this.options.id}): ` : timestamp + this.options.prefix + ': '
+        if (this.options.id) return `[${timestamp}${this.options.prefix} (${this.options.id})] `
+        return `[${timestamp}${this.options.prefix}] `
     }
 
     protected runActionConsole(message:string) {
