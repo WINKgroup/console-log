@@ -37,17 +37,17 @@ export enum ConsoleLogMethod {
     ERROR = 'error'
 }
 
-export interface GeneralOptions {
+export interface ConsoleLogGeneralOptions {
     id?: string
     prefix?: string
     verbosity?: LogLevel
 }
 
 export default class ConsoleLog {
-    generalOptions:GeneralOptions
+    generalOptions:ConsoleLogGeneralOptions
     levelOptions: {[key:string]: PartialDeep<ConsoleLogLevelOptions>}
 
-    constructor(generalOptions?:GeneralOptions, levelOptions?:{[key:string]: PartialDeep<ConsoleLogLevelOptions>}) {
+    constructor(generalOptions?:ConsoleLogGeneralOptions, levelOptions?:{[key:string]: PartialDeep<ConsoleLogLevelOptions>}) {
         this.generalOptions = generalOptions || {}
         this.levelOptions = levelOptions || {}
     }
@@ -113,7 +113,7 @@ export default class ConsoleLog {
         this.print(message, LogLevel.ERROR)
     }
 
-    spawn(inputGeneralOptions?:GeneralOptions, inputLevelOptions?: {[key:string]: PartialDeep<ConsoleLogLevelOptions>}) {
+    spawn(inputGeneralOptions?:ConsoleLogGeneralOptions, inputLevelOptions?: {[key:string]: PartialDeep<ConsoleLogLevelOptions>}) {
         const generalOptions = _.defaultsDeep(inputGeneralOptions, this.generalOptions)
         const levelOptions = _.defaults(inputLevelOptions, this.levelOptions)
 
