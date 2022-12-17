@@ -30,17 +30,17 @@ export declare enum ConsoleLogMethod {
     WARN = "warn",
     ERROR = "error"
 }
-export interface GeneralOptions {
+export interface ConsoleLogGeneralOptions {
     id?: string;
     prefix?: string;
     verbosity?: LogLevel;
 }
 export default class ConsoleLog {
-    generalOptions: GeneralOptions;
+    generalOptions: ConsoleLogGeneralOptions;
     levelOptions: {
         [key: string]: PartialDeep<ConsoleLogLevelOptions>;
     };
-    constructor(generalOptions?: GeneralOptions, levelOptions?: {
+    constructor(generalOptions?: ConsoleLogGeneralOptions, levelOptions?: {
         [key: string]: PartialDeep<ConsoleLogLevelOptions>;
     });
     protected getLogLevelObj(level: LogLevel): ConsoleLogLevel;
@@ -48,7 +48,7 @@ export default class ConsoleLog {
     debug(message: string): void;
     warn(message: string): void;
     error(message: string): void;
-    spawn(inputGeneralOptions?: GeneralOptions, inputLevelOptions?: {
+    spawn(inputGeneralOptions?: ConsoleLogGeneralOptions, inputLevelOptions?: {
         [key: string]: PartialDeep<ConsoleLogLevelOptions>;
     }): ConsoleLog;
 }
