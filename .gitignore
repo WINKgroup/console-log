@@ -1,2 +1,4 @@
+dist/**/*
 test.ts
 package-lock.json
+yarn.lock

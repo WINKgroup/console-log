@@ -120,3 +120,5 @@ export default class ConsoleLog {
         return new ConsoleLog(generalOptions, levelOptions)
     }
 }
+
+export { ConsoleLogLevel, ConsoleLogLevelOptions }
