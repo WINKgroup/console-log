@@ -2,12 +2,12 @@
 enhanced logging library
 
 ## Install
-```
+```bash
 npm install @winkgroup/console-log
 ```
 
 ## Usage
-```
+```js
 import ConsoleLog from '@winkgroup/console-log'
 
 consoleLog = new ConsoleLog()
@@ -15,7 +15,7 @@ consoleLog.print('hello world!')
 ```
 
 you can set `prefix` and `id` properties that will become part of header of each log:
-```
+```js
 import ConsoleLog from '@winkgroup/console-log'
 
 consoleLog = new ConsoleLog({prefix: 'CoolLog', id: '1'})
@@ -55,6 +55,13 @@ ConsoleLog comes with five verbosity levels:
 * WARN = 2
 * ERROR = 1
 * NONE = 0
+
+### Tips
+chalk v5 does't work properly in commonjs. To upgrade to minor version with ncu the command is
+
+```bash
+ncu -u -t minor
+```
 
 ## Maintainers
 * [fairsayan](https://github.com/fairsayan)
