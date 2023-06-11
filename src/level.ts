@@ -1,110 +1,126 @@
-import _ from "lodash"
-import chalk from 'chalk'
-import { LogAction, ConsoleLogColor, ConsoleLogMethod, LogTimestampFormat } from "./index"
-import { padZeros } from "@winkgroup/misc"
-import type { PartialDeep } from 'type-fest'
+import _ from 'lodash';
+import chalk from 'chalk';
+import {
+    LogAction,
+    ConsoleLogColor,
+    ConsoleLogMethod,
+    LogTimestampFormat,
+} from './index';
+import { padZeros } from '@winkgroup/misc';
+import type { PartialDeep } from 'type-fest';
 
 export interface ConsoleLogLevelOptions {
-    id?: string
-    prefix?: string
-    action: LogAction,
-    timestampFormat?: LogTimestampFormat,
+    id?: string;
+    prefix?: string;
+    action: LogAction;
+    timestampFormat?: LogTimestampFormat;
     consoleOptions?: {
-        color?: ConsoleLogColor
-        method?: ConsoleLogMethod
-    }
+        color?: ConsoleLogColor;
+        method?: ConsoleLogMethod;
+    };
 }
 
 export class ConsoleLogLevel {
-    options:ConsoleLogLevelOptions
+    options: ConsoleLogLevelOptions;
 
-    constructor(options?:PartialDeep<ConsoleLogLevelOptions>) {
-        this.options = _.defaults(options, { 
-            action: LogAction.CONSOLE
-         })
+    constructor(options?: PartialDeep<ConsoleLogLevelOptions>) {
+        this.options = _.defaults(options, {
+            action: LogAction.CONSOLE,
+        });
     }
 
     protected buildTimestamp() {
-        const format = this.options.timestampFormat || LogTimestampFormat.NONE
-        let result = ''
-        if (format === LogTimestampFormat.NONE) return result
-        const now = new Date()
+        const format = this.options.timestampFormat || LogTimestampFormat.NONE;
+        let result = '';
+        if (format === LogTimestampFormat.NONE) return result;
+        const now = new Date();
 
-        switch(format) {
-            case LogTimestampFormat.FULL:       result = now.toString();    break
+        switch (format) {
+            case LogTimestampFormat.FULL:
+                result = now.toString();
+                break;
             case LogTimestampFormat.TIME:
-                result = now.toTimeString().substring(0, 8)
-                break
+                result = now.toTimeString().substring(0, 8);
+                break;
             case LogTimestampFormat.MILLISECONDS:
-                result = now.toTimeString().substring(0, 8)
-                result += '.' + padZeros(now.valueOf() % 1000, 4)
-                break
+                result = now.toTimeString().substring(0, 8);
+                result += '.' + padZeros(now.valueOf() % 1000, 4);
+                break;
             default:
-                throw new Error(`unrecognized timestampFormat "${format}"`)
+                throw new Error(`unrecognized timestampFormat "${format}"`);
         }
-        return result
+        return result;
     }
 
     protected prepareMessage() {
-        let timestamp = this.buildTimestamp()
-        if (this.options.prefix === undefined) return `[${timestamp}] `
-        if (timestamp) timestamp += ' '
-        if (this.options.id) return `[${timestamp}${this.options.prefix} (${this.options.id})] `
-        return `[${timestamp}${this.options.prefix}] `
+        let timestamp = this.buildTimestamp();
+        if (this.options.prefix === undefined) return `[${timestamp}] `;
+        if (timestamp) timestamp += ' ';
+        if (this.options.id)
+            return `[${timestamp}${this.options.prefix} (${this.options.id})] `;
+        return `[${timestamp}${this.options.prefix}] `;
     }
 
-    protected runActionConsole(message:string) {
-        const method = ( this.options.consoleOptions && this.options.consoleOptions.method ? this.options.consoleOptions.method : ConsoleLogMethod.INFO )
-        const color = ( this.options.consoleOptions && this.options.consoleOptions.color ? this.options.consoleOptions.color : ConsoleLogColor.DEFAULT )
-        let text = this.prepareMessage() + message
+    protected runActionConsole(message: string) {
+        const method =
+            this.options.consoleOptions && this.options.consoleOptions.method
+                ? this.options.consoleOptions.method
+                : ConsoleLogMethod.INFO;
+        const color =
+            this.options.consoleOptions && this.options.consoleOptions.color
+                ? this.options.consoleOptions.color
+                : ConsoleLogColor.DEFAULT;
+        let text = this.prepareMessage() + message;
 
-        switch(color) {
+        switch (color) {
             case ConsoleLogColor.GREEN:
-                text = chalk.green(text)
-                break
+                text = chalk.green(text);
+                break;
             case ConsoleLogColor.YELLOW_BRIGHT:
-                text = chalk.yellowBright(text)
-                break
+                text = chalk.yellowBright(text);
+                break;
             case ConsoleLogColor.RED:
-                text = chalk.red(text)
-                break
+                text = chalk.red(text);
+                break;
         }
 
-        switch(method) {
+        switch (method) {
             case ConsoleLogMethod.DEBUG:
-                console.debug( text )
-                break
+                console.debug(text);
+                break;
             case ConsoleLogMethod.INFO:
-                console.info( text )
-                break
+                console.info(text);
+                break;
             case ConsoleLogMethod.WARN:
-                console.warn( text )
-                break
+                console.warn(text);
+                break;
             case ConsoleLogMethod.ERROR:
-                console.error( text )
-                break
+                console.error(text);
+                break;
             default:
-                throw new Error(`unrecognized consoleLogMethod "${method}"`)
+                throw new Error(`unrecognized consoleLogMethod "${method}"`);
         }
     }
 
-    protected runActionThrowError(message:string) {
-        const text = this.prepareMessage() + message
-        throw new Error(text)
+    protected runActionThrowError(message: string) {
+        const text = this.prepareMessage() + message;
+        throw new Error(text);
     }
 
-    log(message:string) {
+    log(message: string) {
         switch (this.options.action) {
             case LogAction.CONSOLE:
-                this.runActionConsole(message)
-                break
+                this.runActionConsole(message);
+                break;
             case LogAction.THROW_ERROR:
-                this.runActionThrowError(message)
-                break
+                this.runActionThrowError(message);
+                break;
             case LogAction.NONE:
-                break
+                break;
             default:
-                throw new Error(`unrecognized log action "${ this.options.action }"`)
+                throw new Error(
+                    `unrecognized log action "${this.options.action}"`
+                );
         }
     }
 }
