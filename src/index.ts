@@ -84,7 +84,7 @@ export function preMessage(input: {
     prefix?: string;
 }) {
     let timestamp = buildTimestamp(input.timestampFormat);
-    if (input.prefix === undefined) return timestamp ? `[${timestamp}]` : '';
+    if (!input.prefix) return timestamp ? `[${timestamp}]` : '';
     if (timestamp) timestamp += ' ';
     if (input.id) return `[${timestamp}${input.prefix} (${input.id})]`;
     return `[${timestamp}${input.prefix}]`;
