@@ -172,15 +172,16 @@ export function printLogFile(
     const message =
         stringifible instanceof Error ? stringifible.stack : stringifible;
     const text = (preMessage ? preMessage + ' ' + message : message) + '\n';
-    fs.appendFile(options.fullPath, text, 'utf8', () => {
-        if (options.maxBytes && options.maxBytes > 0) {
+    fs.appendFileSync(options.fullPath, text, 'utf8')
+    if (options.maxBytes && options.maxBytes > 0) {
+        process.nextTick(() => {
             let stats = fs.statSync(options.fullPath);
-            if (stats.size > options.maxBytes) {
+            if (stats.size > options.maxBytes!) {
                 let newContent = fs.readFileSync(options.fullPath, 'utf8');
                 const lines = newContent.split('\n');
                 const maxLinesToDelete = 10;
                 while (
-                    Buffer.byteLength(newContent, 'utf8') > options.maxBytes
+                    Buffer.byteLength(newContent, 'utf8') > options.maxBytes!
                 ) {
                     const linesToDelete = Math.min(
                         maxLinesToDelete,
@@ -191,8 +192,8 @@ export function printLogFile(
                 }
                 fs.writeFileSync(options.fullPath, newContent);
             }
-        }
-    });
+        })
+    }
 }
 
 export default class ConsoleLog {
