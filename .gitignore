@@ -1,4 +1,5 @@
-dist/**/*
+dist
 test.ts
 package-lock.json
 yarn.lock
+node_modules

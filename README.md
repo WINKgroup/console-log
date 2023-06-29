@@ -25,28 +25,30 @@ consoleLog.print('hello world!')
 ```
 
 ## API
-### ConsoleLog(GeneralOptions, LogLevelOptions)
-`GeneralOptions` and `LogLevelOptions` are two optional objects.
+### ConsoleLog(GeneralOptions, SpecificOptions)
+`GeneralOptions` and `SpecificOptions` are two optional objects.
 
 methods:
-- `ConsoleLog.print(message, logLevel)`: `message` is a string; `logLevel` is a value from [LogLevel](#loglevel)
+- `ConsoleLog.print(message, [logLevel])`: `message` is a string; `logLevel` is a value from [LogLevel](#loglevel)
 - `ConsoleLog.debug(message)`: shortcut of `print` method with DEBUG [LogLevel](#loglevel)
 - `ConsoleLog.warn(message)`: shortcut of `print` method with WARN [LogLevel](#loglevel)
 - `ConsoleLog.error(message)`: shortcut of `print` method with ERROR [LogLevel](#loglevel)
-- `ConsoleLog.spawn(GeneralOptions, LogLevelOptions)`: it generates a new `ConsoleLog` object that inherits same options of original with some updates according with parameters passed
-
+- `ConsoleLog.spawn(GeneralOptions)`: it generates a new `ConsoleLog` object that inherits same options of original with some updates according with parameters passed
 
 ### GeneralOptions
 all the attributes of this object are optional:
 - GeneralOptions.id: an id that will be shown for each log
 - GeneralOptions.prefix: a prefix that will be shown for each log
-- GeneralOptions.verbosity: every log that is below this [LogLevel](#loglevel) will have [LogAction](#logaction) = NONE
+- GeneralOptions.timestampFormat: a timestamp with these possible values: 'full', 'time', 'milliseconds', 'none' (default)
+- GeneralOptions.verbosity: every log that is below this [LogLevel](#loglevel) will have no action
 
-### LogAction
-enum collection of possible actions to perform when a method of `ConsoleLog` object is called
-- CONSOLE: print something in the console
-- THROW_ERROR: throw a new error instead of printing it
-- NONE: do nothing
+### SpecificOptions
+all the attributes of this object are optional, all those not declared will be inherited by [GeneralOptions](#GeneralOptions):
+- SpecificOptions.id: an id that will be shown for each log
+- SpecificOptions.prefix: a prefix that will be shown for each log
+- SpecificOptions.timestampFormat: a timestamp with these possible values: 'full', 'time', 'milliseconds', 'none' (default)
+- SpecificOptions.levels: [LogLevel](#loglevel) to those this option has to be applied, single level can be expressed. If this attribute is not set, then these options will be applied to any [LogLevel](#loglevel)
+- SpecificOptions.action: object containing one of these actions: 'console' | 'file' | 'error' | 'none'
 
 ### LogLevel
 ConsoleLog comes with five verbosity levels:
