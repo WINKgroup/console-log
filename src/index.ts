@@ -17,7 +17,7 @@ export type ConsoleLogTimestampFormat =
     | 'time'
     | 'milliseconds'
     | 'none';
-export type ConsoleLogColor = 'green' | 'yellowBright' | 'red' | 'default';
+export type ConsoleLogColor = 'green' | 'yellow' | 'red' | 'default';
 export type ConsoleLogMethod = 'debug' | 'info' | 'warn' | 'error' | 'none';
 
 export interface ConsoleLogGeneralOptions {
@@ -94,7 +94,7 @@ export function printLogConsole(
     stringifible: any,
     preMessage: string,
     options: ConsoleLogActionConsoleOptions,
-    level: ConsoleLogLevel
+    level: ConsoleLogLevel,
 ) {
     let method = options.method;
     let color = options.color;
@@ -112,7 +112,7 @@ export function printLogConsole(
                 break;
             case ConsoleLogLevel.WARN:
                 method = 'warn';
-                if (!color) color = 'yellowBright';
+                if (!color) color = 'yellow';
                 break;
             case ConsoleLogLevel.ERROR:
                 method = 'error';
@@ -129,8 +129,8 @@ export function printLogConsole(
         case 'green':
             text = chalk.green(preMessage, message);
             break;
-        case 'yellowBright':
-            text = chalk.yellowBright(preMessage, stringifible);
+        case 'yellow':
+            text = chalk.yellow(preMessage, stringifible);
             break;
         case 'red':
             text = chalk.red(preMessage, message);
@@ -167,12 +167,12 @@ export function printLogError(stringifible: any, preMessage: string) {
 export function printLogFile(
     stringifible: any,
     preMessage: string,
-    options: ConsoleLogActionFileOptions
+    options: ConsoleLogActionFileOptions,
 ) {
     const message =
         stringifible instanceof Error ? stringifible.stack : stringifible;
     const text = (preMessage ? preMessage + ' ' + message : message) + '\n';
-    fs.appendFileSync(options.fullPath, text, 'utf8')
+    fs.appendFileSync(options.fullPath, text, 'utf8');
     if (options.maxBytes && options.maxBytes > 0) {
         process.nextTick(() => {
             let stats = fs.statSync(options.fullPath);
@@ -185,24 +185,25 @@ export function printLogFile(
                 ) {
                     const linesToDelete = Math.min(
                         maxLinesToDelete,
-                        lines.length
+                        lines.length,
                     );
                     for (let i = 0; i < linesToDelete; i++) lines.shift();
                     newContent = lines.join('\n');
                 }
                 fs.writeFileSync(options.fullPath, newContent);
             }
-        })
+        });
     }
 }
 
 export default class ConsoleLog {
     generalOptions: ConsoleLogGeneralOptions;
     specificOptions?: ConsoleLogSpecificOptions[];
+    static verbosity?: ConsoleLogLevel;
 
     constructor(
         generalOptions?: ConsoleLogGeneralOptions,
-        specificOptions?: ConsoleLogSpecificOptions[]
+        specificOptions?: ConsoleLogSpecificOptions[],
     ) {
         this.generalOptions = generalOptions || {};
         this.specificOptions = specificOptions;
@@ -211,7 +212,7 @@ export default class ConsoleLog {
     protected applyPolicyNoLevelCheck(
         stringifible: any,
         policy: ConsoleLogSpecificOptions,
-        level: ConsoleLogLevel
+        level: ConsoleLogLevel,
     ) {
         const prefixMessage = preMessage(policy);
 
@@ -221,7 +222,7 @@ export default class ConsoleLog {
                     stringifible,
                     prefixMessage,
                     policy.action,
-                    level
+                    level,
                 );
                 break;
             case 'error':
@@ -236,10 +237,13 @@ export default class ConsoleLog {
     }
 
     print(stringifible: any, level = ConsoleLogLevel.INFO) {
+        const defaultVerbosity = ConsoleLog.verbosity
+            ? ConsoleLog.verbosity
+            : ConsoleLogLevel.INFO;
         const verbosity =
             this.generalOptions.verbosity !== undefined
                 ? this.generalOptions.verbosity
-                : ConsoleLogLevel.INFO;
+                : defaultVerbosity;
         if (verbosity < level || level === ConsoleLogLevel.NONE) return;
 
         let anyPolicyApplied = false;
@@ -248,8 +252,8 @@ export default class ConsoleLog {
                 let levels = Array.isArray(specificOption.levels)
                     ? specificOption.levels
                     : typeof specificOption.levels !== 'undefined'
-                    ? [specificOption.levels]
-                    : undefined;
+                      ? [specificOption.levels]
+                      : undefined;
                 if (levels && levels.indexOf(level) === -1) continue;
                 anyPolicyApplied = true;
                 const policy = _.defaults(specificOption, {
@@ -270,7 +274,7 @@ export default class ConsoleLog {
                     timestampFormat: this.generalOptions.timestampFormat,
                     action: { name: 'console' },
                 },
-                level
+                level,
             );
     }
 
@@ -289,12 +293,12 @@ export default class ConsoleLog {
     spawn(inputGeneralOptions?: ConsoleLogGeneralOptions) {
         const generalOptions = _.defaults(
             inputGeneralOptions,
-            this.generalOptions
+            this.generalOptions,
         );
 
         return new ConsoleLog(
             generalOptions,
-            _.cloneDeep(this.specificOptions)
+            _.cloneDeep(this.specificOptions),
         );
     }
 }
